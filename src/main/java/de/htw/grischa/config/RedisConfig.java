@@ -2,9 +2,11 @@ package de.htw.grischa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import de.htw.grischa.controllers.WorkerLocationController;
 import de.htw.grischa.events.MessageBroadcaster;
 import de.htw.grischa.events.RedisEventListener;
 import de.htw.grischa.models.Worker;
+import de.htw.grischa.models.WorkerLocation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -63,4 +65,11 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean
+    RedisTemplate<String, WorkerLocation> redisTemplateWorkerLocation(RedisConnectionFactory connectionFactory){
+        RedisTemplate<String, WorkerLocation> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+
+        return redisTemplate;
+    }
 }
