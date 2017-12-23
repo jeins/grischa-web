@@ -1,0 +1,40 @@
+{
+  "name": "RealtimeVisualization",
+  "version": "0.0.1",
+  "description": "Realtime Visualization of parallel grid chess",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./application/service.js",
+    "generate frontend": "gulp run",
+    "minify frontend": "gulp built"
+  },
+  "devDependencies": {
+    "eslint": "^3.7.1",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-html-replace": "^1.6.2",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-uglify": "^2.0.0",
+    "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "blueimp-md5": "^2.7.0",
+    "body-parser": "^1.15.2",
+    "cron": "^1.1.1",
+    "d3": "^3.5.17",
+    "eventsource": "^0.2.2",
+    "express": "^4.14.0",
+    "faker": "^3.1.0",
+    "geoip-lite": "^1.1.8",
+    "leaflet": "^1.0.2",
+    "leaflet-fullscreen": "^1.0.1",
+    "lodash": "^4.17.2",
+    "moment": "^2.15.1",
+    "morgan": "^1.7.0",
+    "prunecluster": "^2.0.0-beta.3",
+    "restler": "^3.4.0",
+    "socket.io": "^1.5.1",
+    "sse": "0.0.6"
+  }
+}

@@ -2,7 +2,6 @@ package de.htw.grischa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import de.htw.grischa.controllers.WorkerLocationController;
 import de.htw.grischa.events.MessageBroadcaster;
 import de.htw.grischa.events.RedisEventListener;
 import de.htw.grischa.models.Worker;

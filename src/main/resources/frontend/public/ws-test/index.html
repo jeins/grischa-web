@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebSocket</title>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" ntegrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+
+<script type="text/javascript">
+	var stompClient = null;
+
+	function setConnected(connected) {
+		document.getElementById('connect').disabled = connected;
+		document.getElementById('disconnect').disabled = !connected;
+	}
+
+	function connect() {
+		var socket = new SockJS('http://localhost:8080/ws');
+		stompClient = Stomp.over(socket);
+		stompClient.connect({}, function(frame) {
+			setConnected(true);
+			console.log('Connected: ' + frame);
+			stompClient.subscribe('/worker/data', function(data) {
+                $('#messages').append('<p>' + data.body + '</p>');
+			});
+		});
+	}
+
+	function disconnect() {
+		if (stompClient != null) {
+			stompClient.disconnect();
+		}
+		setConnected(false);
+		console.log("Disconnected");
+	}
+</script>
+</head>
+<body onload="disconnect();connect();">
+	<noscript>
+		<h2 style="color: #ff0000">Seems your browser doesn't support
+			Javascript! Websocket relies on Javascript being enabled. Please
+			enable Javascript and reload this page!</h2>
+	</noscript>
+
+	<div>
+		<h2>Websocket and Redis demo</h2>
+		<div>
+			<div>WebSocket connection</div>
+			<button id="connect" onclick="connect();">Connect</button>
+			<button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+		</div>
+		<div id="conversationDiv">
+			<div id="messages"></div>
+		</div>
+	</div>
+
+</body>
+</html>
