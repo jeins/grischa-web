@@ -1,6 +1,8 @@
 package de.htw.grischa.events;
 
 import de.htw.grischa.controllers.WorkerLocationController;
+import de.htw.grischa.models.Master;
+import de.htw.grischa.models.MasterWorker;
 import de.htw.grischa.models.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -24,6 +26,7 @@ public class MessageBroadcaster {
     public void handleMessage(Worker worker, String channel){
         // use random location
         worker.setHostName(changeHostNameWithRandomData(worker.getHostName()));
+        worker.setStatusPoint();
 
         workerLocationController.setWorker(worker);
 
@@ -33,7 +36,10 @@ public class MessageBroadcaster {
             workerLocationController.generateGeoLocationAndSaveToRedis();
         }
 
-        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_TOPIC_PATH, worker);
+        Master master = new Master();
+        MasterWorker masterWorker = new MasterWorker(worker, master);
+
+        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_TOPIC_PATH, masterWorker);
     }
 
     public void setBrokerMessagingTemplate(SimpMessagingTemplate brokerMessagingTemplate){

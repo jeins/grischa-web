@@ -47,8 +47,8 @@ public class WorkerLocationController {
 
         WorkerLocation workerLocation = new WorkerLocation(
                 worker.getHostName(),
-                latitudeLongitude.get("latitude"),
-                latitudeLongitude.get("longitude"));
+                Double.parseDouble(latitudeLongitude.get("latitude")),
+                Double.parseDouble(latitudeLongitude.get("longitude")));
 
         workerLocationRepository.save(workerLocation);
 
@@ -57,7 +57,7 @@ public class WorkerLocationController {
     }
 
     public void generateRandomLocation(){
-        String latLongDE[][] = randomLatLongDE();
+        double latLongDE[][] = randomLatLongDE();
 
         for (int i = 0; i < latLongDE.length; i++){
             WorkerLocation workerLocation = new WorkerLocation(
@@ -69,24 +69,24 @@ public class WorkerLocationController {
     }
 
     public void cleanHashFromRandomLocation(){
-        String latLongDE[][] = randomLatLongDE();
+        double latLongDE[][] = randomLatLongDE();
 
         for (int i = 0; i < latLongDE.length; i++){
             workerLocationRepository.delete(Integer.toString(i));
         }
     }
 
-    private String[][] randomLatLongDE(){
-        String latLongDE[][] = {
-                {"51.9455", "13.8852"},
-                {"52.357756", "8.032782"},
-                {"50.801353", "8.362372"},
-                {"49.349033", "11.328680"},
-                {"49.988955", "7.747137"},
-                {"48.787614", "8.648016"},
-                {"48.584530", "8.296454"},
-                {"48.307606", "8.296454"},
-                {"53.444489", "10.823309}"},
+    private double[][] randomLatLongDE(){
+        double latLongDE[][] = {
+                {51.9455, 13.8852},
+                {52.357756, 8.032782},
+                {50.801353, 8.362372},
+                {49.349033, 11.328680},
+                {49.988955, 7.747137},
+                {48.787614, 8.648016},
+                {48.584530, 8.296454},
+                {48.307606, 8.296454},
+                {53.444489, 10.823309}
         };
 
         return latLongDE;

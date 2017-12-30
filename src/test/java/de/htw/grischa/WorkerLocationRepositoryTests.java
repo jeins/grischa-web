@@ -26,8 +26,8 @@ public class WorkerLocationRepositoryTests {
     WorkerLocationRepository workerLocationRepository;
 
     private String hostNameTest = "abc";
-    private String latitudeTest = "1.234";
-    private String longitudeTest = "1.2345";
+    private double latitudeTest = 1.234;
+    private double longitudeTest = 1.2345;
 
     @SpringBootApplication
     static class Config{}
@@ -54,13 +54,7 @@ public class WorkerLocationRepositoryTests {
     @Test
     public void findByHostNameShouldReturnTrue(){
         WorkerLocation workerLocation = workerLocationRepository.findByHostName(hostNameTest);
-        Assert.assertEquals(latitudeTest, workerLocation.getLatitude());
-        Assert.assertEquals(longitudeTest, workerLocation.getLongitude());
-    }
-
-    @Test
-    public void findAllShouldReturnOne(){
-        Map<String, WorkerLocation> listWorkerLocation = workerLocationRepository.findAll();
-        Assert.assertEquals(1, listWorkerLocation.size());
+        Assert.assertEquals(latitudeTest, workerLocation.getLatitude(), 0);
+        Assert.assertEquals(longitudeTest, workerLocation.getLongitude(), 0);
     }
 }

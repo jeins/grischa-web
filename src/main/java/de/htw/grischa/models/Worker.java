@@ -7,8 +7,9 @@ public class Worker {
     private int result;
     private String hostName;
     private LocalDateTime sendDate;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
+    private String statusPoint;
 
     public Worker(){}
 
@@ -44,19 +45,34 @@ public class Worker {
         this.sendDate = LocalDateTime.parse(sendDate);
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setStatusPoint(){
+        int value = getResult();
+        statusPoint = "win";
+
+        if(value < 0){
+            statusPoint = "lost";
+        } else if(value == 0){
+            statusPoint = "draw";
+        }
+    }
+
+    public String getStatusPoint(){
+        return statusPoint;
     }
 }
