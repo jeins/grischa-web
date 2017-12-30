@@ -126,10 +126,9 @@ Map.prototype.setWorkerLocation = function(worker){
 
 Map.prototype.getWorkerIconData = function(worker){
     var markerColors = this.setMarkerColors();
-    var data =  "Name: " + worker.namen + "<br>" +
-                "Ip: " + worker.ip + "<br>" +
-                "Last Point: " + worker.wert + "<br>" +
-                "Last Update: " + worker.date;
+    var data =  "Name: " + worker.hostName + "<br>" +
+                "Last Point: " + worker.result + "<br>" +
+                "Last Update: " + worker.sendDate;
 
     return {
         icon: markerColors[worker.statusPoint],

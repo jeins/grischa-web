@@ -7,12 +7,15 @@
   ],
   "libs": {
     "scripts": [
+      "./jquery/jquery.min.js",
       "./d3/d3.js",
       "./leaflet/dist/leaflet.js",
       "./leaflet-fullscreen/dist/Leaflet.fullscreen.js",
       "./prunecluster/dist/PruneCluster.js",
       "./eventsource/example/eventsource-polyfill.js",
-      "./blueimp-md5/js/md5.min.js"
+      "./blueimp-md5/js/md5.min.js",
+      "./sockjs-client/dist/sockjs.min.js",
+      "./stompjs/lib/stomp.min.js"
     ],
     "styles": [
       "./leaflet/dist/leaflet.css",
