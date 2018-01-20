@@ -43,12 +43,12 @@ public class WorkerLocationController {
     }
 
     public void generateGeoLocationAndSaveToRedis(){
-        Map<String, String> latitudeLongitude = GeolocationGenerator.getLatitudeLongitude(worker.getHostName());
+        Map<String, Double> latitudeLongitude = GeolocationGenerator.getLatitudeLongitude(worker.getHostName());
 
         WorkerLocation workerLocation = new WorkerLocation(
                 worker.getHostName(),
-                Double.parseDouble(latitudeLongitude.get("latitude")),
-                Double.parseDouble(latitudeLongitude.get("longitude")));
+                latitudeLongitude.get("latitude"),
+                latitudeLongitude.get("longitude"));
 
         workerLocationRepository.save(workerLocation);
 
