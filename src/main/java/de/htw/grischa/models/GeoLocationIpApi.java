@@ -1,6 +1,6 @@
 package de.htw.grischa.models;
 
-public class GeolocationIpApi {
+public class GeoLocationIpApi {
     String as;
     String city;
     String country;
@@ -16,7 +16,7 @@ public class GeolocationIpApi {
     String timezone;
     String zip;
 
-    public GeolocationIpApi() {
+    public GeoLocationIpApi() {
     }
 
     public String getAs() {
