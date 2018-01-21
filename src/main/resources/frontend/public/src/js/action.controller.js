@@ -277,8 +277,6 @@ Action.prototype.drawLine = function(data){
     }
     this.lineCollection[key].color = color;
 
-    console.log(this.lineCollection);
-
     var line = L.polyline(this.lineCollection[key].pos, {color: this.lineCollection[key].color});
 
     if(redraw) {
