@@ -37,8 +37,50 @@ DataProvider.prototype.run = function(){
  * @param dataSet
  */
 DataProvider.prototype.update = function(data){
-    var me = this;
-    me.map.setMasterLocation(data.master);
-    me.map.setWorkerLocationWithCluster(data.worker);
-    me.action.shoot(data);
+    this.map.setMasterLocation(data.master);
+    this.map.setWorkerLocationWithCluster(data.worker);
+    this.action.shoot(data);
+
+    this.saveToLocalStorage(data.worker);
+};
+
+DataProvider.prototype.saveToLocalStorage = function (worker) {
+    var hostName = "log:" + worker.hostName;
+
+    if (typeof(Storage) !== "undefined"){
+        var arrWorkerData = JSON.parse(localStorage.getItem(hostName), true);
+
+        if (!arrWorkerData){
+            arrWorkerData = [];
+        }
+
+        arrWorkerData.push(worker);
+
+        localStorage.setItem(hostName, JSON.stringify(arrWorkerData));
+    } else{
+        console.error("no web storage support!");
+    }
+};
+
+DataProvider.prototype.getLocalStorageData = function () {
+    var logData = [];
+
+    for (var i=0; i<localStorage.length; i++){
+        var hostName = localStorage.key(i);
+        var data = JSON.parse(localStorage.getItem(hostName));
+        var tmp = {};
+        tmp[hostName] = data;
+        logData.push(tmp);
+    }
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(logData)));
+    element.setAttribute('download', "webData.json");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 };

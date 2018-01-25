@@ -12,14 +12,16 @@ const PATHS = {
     js: 'public/src/js/',
     css: 'public/src/css/**.css',
     dist: '../static/',
-    index: 'public/src/index.html'
+    index: 'public/src/index.html',
+    compare: 'public/src/compare.html'
 };
 
 gulp.task('components', [
     'merge:js',
     'merge:css',
     'copy:lib_scripts',
-    'copy:lib_assets'
+    'copy:lib_assets',
+    'copy:compareTestFile'
 ]);
 
 gulp.task('run', function(cb){
@@ -42,6 +44,10 @@ gulp.task('index', function(){
             js: config.libs.scripts.concat('app.js')
         }))
         .pipe(gulp.dest(PATHS.dist));
+});
+
+gulp.task('copy:compareTestFile', function () {
+    gulp.src(PATHS.compare).pipe(gulp.dest(PATHS.dist));
 });
 
 gulp.task('copy:lib_scripts', function(){

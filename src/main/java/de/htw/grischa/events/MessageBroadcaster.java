@@ -24,17 +24,7 @@ public class MessageBroadcaster {
     private Map<String, String> listOfRandomHostName = new HashMap<String, String>();
 
     public void handleMessage(Worker worker, String channel){
-        // use random location
-        worker.setHostName(changeHostNameWithRandomData(worker.getHostName()));
-        worker.setStatusPoint();
-
-        workerLocationController.setWorker(worker);
-
-        if(workerLocationController.isLocationKeyExist(worker.getHostName())){
-            workerLocationController.setLatitudeLongitude();
-        } else{
-            workerLocationController.generateGeoLocationAndSaveToRedis();
-        }
+        prepareWorkerData(worker);
 
         Master master = new Master();
         MasterWorker masterWorker = new MasterWorker(worker, master);
@@ -61,5 +51,19 @@ public class MessageBroadcaster {
         listOfRandomHostName.put(hostName, Integer.toString(newHostName));
 
         return Integer.toString(newHostName);
+    }
+
+    private void prepareWorkerData(Worker worker){
+        // use random location
+//        worker.setHostName(changeHostNameWithRandomData(worker.getHostName()));
+        worker.setStatusPoint();
+
+        workerLocationController.setWorker(worker);
+
+        if(workerLocationController.isLocationKeyExist(worker.getHostName())){
+            workerLocationController.setLatitudeLongitude();
+        } else{
+            workerLocationController.generateGeoLocationAndSaveToRedis();
+        }
     }
 }

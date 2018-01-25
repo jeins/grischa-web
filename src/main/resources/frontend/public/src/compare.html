@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparing Redis Data & Web Data</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .btn-sq-lg {
+            width: 150px !important;
+            height: 150px !important;
+        }
+        .center {
+            float: none;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .break{
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row break">
+        <div class="col" style="padding-right:20px; border-right: 1px solid #ccc;">
+            <div class="form-group center">
+                <label for="redisData">Redis Data: </label>
+                <input id="redisData" type="file" />
+            </div>
+        </div>
+
+        <div class="col" style="padding-left: 20px">
+            <div class="form-group center">
+                <label for="webData">Web Data: </label>
+                <input id="webData" type="file" />
+            </div>
+        </div>
+    </div>
+    <div class="row break">
+        <div class="col">
+            <div class="center">
+                <a href="#" id="testStatus" class="btn btn-sq-lg btn-secondary disabled" role="button" aria-disabled="true">
+                    Test Status
+                </a>
+            </div>
+            <div class="break">
+                <button type="button" class="btn btn-primary compare" onclick="doCompare()" disabled style="width: 100%">Do Compare</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    var redisData = [];
+    var webData = [];
+    var tableData = '';
+    var selectedData = null;
+
+    init();
+
+    function init() {
+        document.getElementById('redisData').addEventListener('change', onChange);
+        document.getElementById('webData').addEventListener('change', onChange);
+    }
+
+    function onChange(event) {
+        selectedData = event.target.id;
+        var reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(event.target.files[0]);
+    }
+
+    function onReaderLoad(event){
+        var obj = JSON.parse(event.target.result, true);
+
+        if (selectedData === 'redisData'){
+            redisData = fixRedisData(obj);
+            console.log(redisData);
+        } else if (selectedData === 'webData'){
+            webData = obj;
+            console.log(webData);
+        }
+
+        if (redisData.length > 0 && webData.length > 0){
+            $('.compare').prop('disabled', false);
+        } else{
+            $('.compare').prop('disabled', true);
+        }
+    }
+
+    function doCompare() {
+        var comparingTest = [
+            compareTotalHostName(),
+            compareHostNameData()
+        ];
+
+        cleanUpTestStatus();
+
+        if (comparingTest.includes(false)){
+            $('#testStatus').addClass("btn-danger");
+        } else{
+            $('#testStatus').addClass("btn-success");
+        }
+
+        console.log(comparingTest);
+        console.log(tableData);
+    }
+
+    function cleanUpTestStatus(){
+        $('#testStatus')
+            .removeClass('btn-secondary')
+            .removeClass('btn-success')
+            .removeClass('btn-danger');
+    }
+
+    function fixRedisData(arrObj){
+        var obj = arrObj[0];
+        var newObj = [];
+
+        for (var key in obj){
+            var value = obj[key];
+            var tmpArr = [];
+
+            for (var i=0; i<value.length; i++){
+                tmpArr.push(jQuery.parseJSON(value[i]));
+            }
+
+            var tmpObj = {};
+            tmpObj[key] = tmpArr;
+
+            newObj.push(tmpObj);
+        }
+
+        return newObj;
+    }
+
+    function compareTotalHostName(){
+        tableData += '<tr>';
+        tableData += '<td>Total HostName</td>'
+        tableData += '<td>' + redisData.length + '</td>';
+        tableData += '<td>' + webData.length + '</td>';
+        tableData += '</tr>';
+
+        return redisData.length === webData.length;
+    }
+
+    function compareHostNameData(){
+        var getHostNameData = function (obj) {
+            var totalData;
+            var stringHostNameData = '';
+
+            for (var key in obj){
+                var value = obj[key];
+                totalData = value.length;
+                stringHostNameData += key + ' - ' + totalData + '<br>';
+            }
+
+            return {totalData: totalData, dataInfo: stringHostNameData};
+        };
+
+        var tmpRedisResult = getHostNameData(redisData);
+        var tmpWebResult = getHostNameData(webData);
+
+        tableData += '<tr>';
+        tableData += '<td>HostName Data</td>';
+        tableData += '<td>' + tmpRedisResult.dataInfo + '</td>';
+        tableData += '<td>' + tmpWebResult.dataInfo + '</td>';
+        tableData += '</tr>';
+
+        return tmpRedisResult.totalData === tmpWebResult.totalData;
+    }
+
+    function compareDetailValue(){
+        var result = false;
+        var resultInfo = 'match!';
+
+        for (var key in redisData){
+            var redisValue = redisData[key];
+
+            if (!webData.hasOwnProperty(key)){
+                resultInfo = 'hostname not same';
+                break;
+            }
+
+            var webValue = webData[key];
+
+            if (redisValue.length !== webValue.length){
+                resultInfo = 'hostname length not same';
+                break;
+            }
+
+            for(var i=0; i<redisValue.length; i++){
+                var redisWorkerValue = redisValue[i];
+                var webWorkerValue = webValue[i];
+
+
+            }
+        }
+    }
+</script>
+</body>
+</html>
