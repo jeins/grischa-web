@@ -262,8 +262,6 @@
                 for (var j = 0; j < redisValue.length; j++) {
                     var redisWorkerValue = redisValue[j];
                     var webWorkerValue = webValue[j];
-                    console.log(Number(webWorkerValue.result));
-                    console.log(parseInt(Number(redisWorkerValue.result) / 10000));
 
                     if (Number(webWorkerValue.result) !== (parseInt(Number(redisWorkerValue.result) / 10000))) {
                         resultInfo = 'worker value not same';
