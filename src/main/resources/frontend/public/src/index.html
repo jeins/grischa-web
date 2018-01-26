@@ -10,5 +10,34 @@
 
         <!-- build:js -->
         <!-- endbuild -->
+
+        <script type="text/javascript">
+            function getWebData(){
+                var logData = [];
+
+                for (var i=0; i<localStorage.length; i++){
+                    var hostName = localStorage.key(i);
+                    var data = JSON.parse(localStorage.getItem(hostName));
+                    var tmp = {};
+                    tmp[hostName] = data;
+                    logData.push(tmp);
+                }
+
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(logData)));
+                element.setAttribute('download', "webData.json");
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+
+            function cleanWebData() {
+                localStorage.clear();
+            }
+        </script>
     </body>
 </html>

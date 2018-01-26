@@ -46,6 +46,19 @@
                     Test Status
                 </a>
             </div>
+            <div class="center break">
+                <table id="testDetail" class="table">
+                    <thead>
+                    <tr>
+                        <th>Test Name</th>
+                        <th>Redis Data</th>
+                        <th>Web Data</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
             <div class="break">
                 <button type="button" class="btn btn-primary compare" onclick="doCompare()" disabled style="width: 100%">Do Compare</button>
             </div>
@@ -82,11 +95,13 @@
         var obj = JSON.parse(event.target.result, true);
 
         if (selectedData === 'redisData'){
-            redisData = fixRedisData(obj);
-            console.log(redisData);
+            try{
+                redisData = fixRedisData(obj);
+            } catch(err){
+                alert("wrong redis data");
+            }
         } else if (selectedData === 'webData'){
             webData = obj;
-            console.log(webData);
         }
 
         if (redisData.length > 0 && webData.length > 0){
@@ -99,7 +114,8 @@
     function doCompare() {
         var comparingTest = [
             compareTotalHostName(),
-            compareHostNameData()
+            compareHostNameData(),
+            compareDetailValue()
         ];
 
         cleanUpTestStatus();
@@ -110,6 +126,8 @@
             $('#testStatus').addClass("btn-success");
         }
 
+        $('#testDetail tbody').html(tableData);
+        tableData = '';
         console.log(comparingTest);
         console.log(tableData);
     }
@@ -134,6 +152,7 @@
             }
 
             var tmpObj = {};
+            key = key.replace('log:', '');
             tmpObj[key] = tmpArr;
 
             newObj.push(tmpObj);
@@ -142,25 +161,46 @@
         return newObj;
     }
 
-    function compareTotalHostName(){
-        tableData += '<tr>';
-        tableData += '<td>Total HostName</td>'
-        tableData += '<td>' + redisData.length + '</td>';
-        tableData += '<td>' + webData.length + '</td>';
-        tableData += '</tr>';
+    function setTableData(testName, redisData, webData){
+        if(webData === ''){
+            tableData += '<tr>';
+            tableData += '<td>' + testName + '</td>'
+            tableData += '<td colspan="2">' + redisData + '</td>';
+            tableData += '</tr>';
+        } else{
+            tableData += '<tr>';
+            tableData += '<td>' + testName + '</td>'
+            tableData += '<td>' + redisData + '</td>';
+            tableData += '<td>' + webData + '</td>';
+            tableData += '</tr>';
+        }
+    }
 
-        return redisData.length === webData.length;
+    function compareTotalHostName(){
+        var testResult = redisData.length === webData.length;
+        var displayColor = testResult === true ? 'green' : 'red';
+
+        setTableData(
+            'Total HostName',
+            '<span style="color: ' + displayColor + '">' + redisData.length + '</span>',
+            '<span style="color: ' + displayColor + '">' + webData.length + '</span>'
+        );
+
+        return testResult;
     }
 
     function compareHostNameData(){
-        var getHostNameData = function (obj) {
+        var getHostNameData = function (arrObj) {
             var totalData;
             var stringHostNameData = '';
+            for(var i=0; i<arrObj.length; i++){
+                var obj = arrObj[i];
+                for (var key in obj){
+                    var value = obj[key];
+                    totalData = value.length;
 
-            for (var key in obj){
-                var value = obj[key];
-                totalData = value.length;
-                stringHostNameData += key + ' - ' + totalData + '<br>';
+                    stringHostNameData += key + ' - ' + totalData + '<br>';
+                }
             }
 
             return {totalData: totalData, dataInfo: stringHostNameData};
@@ -169,41 +209,61 @@
         var tmpRedisResult = getHostNameData(redisData);
         var tmpWebResult = getHostNameData(webData);
 
-        tableData += '<tr>';
-        tableData += '<td>HostName Data</td>';
-        tableData += '<td>' + tmpRedisResult.dataInfo + '</td>';
-        tableData += '<td>' + tmpWebResult.dataInfo + '</td>';
-        tableData += '</tr>';
+        setTableData(
+            'HostName Data',
+            tmpRedisResult.dataInfo,
+            tmpWebResult.dataInfo
+        );
 
         return tmpRedisResult.totalData === tmpWebResult.totalData;
     }
 
     function compareDetailValue(){
         var result = false;
-        var resultInfo = 'match!';
+        var resultInfo = '';
 
-        for (var key in redisData){
-            var redisValue = redisData[key];
+        for(var i=0; i<redisData.length; i++){
+            for (var key in redisData[i]){
+                var redisValue = redisData[i][key];
 
-            if (!webData.hasOwnProperty(key)){
-                resultInfo = 'hostname not same';
-                break;
-            }
+                if (!webData[i].hasOwnProperty(key)){
+                    resultInfo = 'hostname not same';
+                    break;
+                }
 
-            var webValue = webData[key];
+                var webValue = webData[i][key];
 
-            if (redisValue.length !== webValue.length){
-                resultInfo = 'hostname length not same';
-                break;
-            }
+                if (redisValue.length !== webValue.length){
+                    resultInfo = 'hostname length not same';
+                    break;
+                }
 
-            for(var i=0; i<redisValue.length; i++){
-                var redisWorkerValue = redisValue[i];
-                var webWorkerValue = webValue[i];
+                for(var j=0; j<redisValue.length; j++){
+                    var redisWorkerValue = redisValue[j];
+                    var webWorkerValue = webValue[j];
 
-
+                    if(Number(webWorkerValue.result) !== (Number(redisWorkerValue.result)/10000)){
+                        resultInfo = 'worker value not same';
+                        break;
+                    }
+                }
             }
         }
+
+        if(resultInfo === ''){
+            result = true;
+            resultInfo = 'match!';
+        }
+
+        var displayColor = result === true ? 'green' : 'red';
+
+        setTableData(
+            'Detail Worker',
+            '<span style="color: ' + displayColor + '">' + resultInfo + '</span>',
+            ''
+        );
+
+        return result;
     }
 </script>
 </body>
