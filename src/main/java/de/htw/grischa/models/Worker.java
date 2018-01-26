@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter;
 public class Worker {
     private int result;
     private String hostName;
-    private LocalDateTime sendDate;
+    private String sendDate;
     private double latitude;
     private double longitude;
     private String statusPoint;
 
     public Worker(){}
 
-    public Worker(int result, String hostName, LocalDateTime sendDate) {
+    public Worker(int result, String hostName, String sendDate) {
         this.result = result;
         this.hostName = hostName;
         this.sendDate = sendDate;
@@ -37,12 +37,12 @@ public class Worker {
 
     public String getSendDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return sendDate.format(formatter);
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(formatter);
     }
 
     public void setSendDate(String sendDate) {
-        this.sendDate = LocalDateTime.parse(sendDate);
+        this.sendDate = sendDate;
     }
 
     public double getLatitude() {
