@@ -24,6 +24,7 @@ public class MessageBroadcaster {
     private Map<String, String> listOfRandomHostName = new HashMap<String, String>();
 
     public void handleMessage(Worker worker, String channel){
+        worker.setHostName("node01.fh-aachen.de");
         prepareWorkerData(worker);
 
         Master master = new Master();

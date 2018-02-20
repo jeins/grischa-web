@@ -9,7 +9,7 @@ function Action(map) {
     this.m = map;
     this.map = map.leafletMap;
     this.mapLayer = map.mapLayer;
-    this.animationTime = 2500;
+    this.animationTime = 4500;
     this.blowRadiusScale = d3.scale.linear()
         .domain([1, 2])
         .range([50, 60]);

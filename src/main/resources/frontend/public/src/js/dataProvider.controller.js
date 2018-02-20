@@ -10,7 +10,7 @@ function DataProvider(action, map){
     this.action = action;
     this.map = map;
 
-    this.socket = new SockJS('http://localhost:8080/ws');
+    this.socket = new SockJS('/ws');
 
 }
 
@@ -54,6 +54,8 @@ DataProvider.prototype.saveToLocalStorage = function (worker) {
             arrWorkerData = [];
         }
 
+        var d = new Date();
+        worker['timeOnClient'] = d.getMilliseconds();
         arrWorkerData.push(worker);
 
         localStorage.setItem(hostName, JSON.stringify(arrWorkerData));
