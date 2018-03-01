@@ -12,7 +12,6 @@ public class Worker {
     private String sendDate;
     private double latitude;
     private double longitude;
-    private String timeOnWorker;
     private String statusPoint;
 
     public int getResult() {
