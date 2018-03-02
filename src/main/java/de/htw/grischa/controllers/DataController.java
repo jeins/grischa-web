@@ -1,6 +1,5 @@
-package de.htw.grischa.events;
+package de.htw.grischa.controllers;
 
-import de.htw.grischa.controllers.WorkerLocationController;
 import de.htw.grischa.models.Master;
 import de.htw.grischa.models.MasterWorker;
 import de.htw.grischa.models.Worker;
@@ -12,8 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class MessageBroadcaster {
-    public static final String WEBSOCKET_MESSAGE_TOPIC_PATH = "/worker/data";
+public class DataController {
+    public static final String REDIS_CHANNEL = "result:grid-xmpp-user-001";
+    public static final String WEBSOCKET_MESSAGE_URI = "/worker/data";
 
     @Autowired
     private SimpMessagingTemplate brokerMessagingTemplate;
@@ -23,18 +23,26 @@ public class MessageBroadcaster {
 
     private Map<String, String> listOfRandomHostName = new HashMap<String, String>();
 
-    public void handleMessage(Worker worker, String channel){
-        worker.setHostName("node01.fh-aachen.de");
-        prepareWorkerData(worker);
+    private Worker worker;
+    private String receivedChannel;
 
-        Master master = new Master();
-        MasterWorker masterWorker = new MasterWorker(worker, master);
+    public void handleMessage(Worker worker, String receivedChannel){
+        this.worker = worker;
+        this.receivedChannel = receivedChannel;
 
-        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_TOPIC_PATH, masterWorker);
+        displayRedisMessage();
+        prepareWorkerData();
+
+        MasterWorker masterWorker = new MasterWorker(worker, new Master());
+
+        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_URI, masterWorker);
     }
 
-    public void setBrokerMessagingTemplate(SimpMessagingTemplate brokerMessagingTemplate){
-        this.brokerMessagingTemplate = brokerMessagingTemplate;
+    private void displayRedisMessage()
+    {
+        System.out.println("Received From Channel: " + receivedChannel);
+        System.out.println(worker.toString());
+
     }
 
     private String changeHostNameWithRandomData(String hostName){
@@ -54,7 +62,7 @@ public class MessageBroadcaster {
         return Integer.toString(newHostName);
     }
 
-    private void prepareWorkerData(Worker worker){
+    private void prepareWorkerData(){
         // use random location
 //        worker.setHostName(changeHostNameWithRandomData(worker.getHostName()));
         worker.setStatusPoint();

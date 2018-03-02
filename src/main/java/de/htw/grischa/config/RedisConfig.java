@@ -2,8 +2,7 @@ package de.htw.grischa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import de.htw.grischa.events.MessageBroadcaster;
-import de.htw.grischa.events.RedisSubscriber;
+import de.htw.grischa.controllers.DataController;
 import de.htw.grischa.models.Worker;
 import de.htw.grischa.models.WorkerLocation;
 import org.springframework.context.annotation.Bean;
@@ -29,31 +28,19 @@ public class RedisConfig {
     }
 
     @Bean
-    MessageListenerAdapter redisSubscriberAdapter(RedisSubscriber redisSubscriber) {
-        MessageListenerAdapter adapter = new MessageListenerAdapter(redisSubscriber, "handleMessage");
+    MessageListenerAdapter redisSubscriberAdapter(DataController dataController) {
+        MessageListenerAdapter adapter = new MessageListenerAdapter(dataController, "handleMessage");
         adapter.setSerializer(messageSerializer());
 
         return adapter;
     }
 
     @Bean
-    /*
-    use websocket as message broadcaster
-     */
-    MessageListenerAdapter messageBroadcasterAdapter(MessageBroadcaster messageBroadcaster){
-        MessageListenerAdapter adapter = new MessageListenerAdapter(messageBroadcaster, "handleMessage");
-        adapter.setSerializer(messageSerializer());
-
-        return adapter;
-    }
-
-    @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, RedisSubscriber redisSubscriber, MessageBroadcaster broadcastListener) {
+    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, DataController dataController) {
 
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(redisSubscriberAdapter(redisSubscriber), new PatternTopic(RedisSubscriber.EVENT_RECEIVE_MESSAGE_KEY));
-        container.addMessageListener(messageBroadcasterAdapter(broadcastListener), new PatternTopic(RedisSubscriber.EVENT_RECEIVE_MESSAGE_KEY));
+        container.addMessageListener(redisSubscriberAdapter(dataController), new PatternTopic(DataController.REDIS_CHANNEL));
 
         return container;
     }
