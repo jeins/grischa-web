@@ -1,7 +1,7 @@
 package de.htw.grischa;
 
 
-import de.htw.grischa.controllers.GeoLocationGenerator;
+import de.htw.grischa.controllers.GeoLocationController;
 import de.htw.grischa.models.GeoLocationIpApi;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class GeoLocationGeneratorTests {
     public void shouldReturnTrueReturnHTWLocation(){
         String hostName = "node.htw-berlin.de";
 
-        Map<String, Double> htwLocation = GeoLocationGenerator.getLatitudeLongitude(hostName);
+        Map<String, Double> htwLocation = GeoLocationController.getLatitudeLongitude(hostName);
 
         Assert.assertEquals(52.5167, htwLocation.get("latitude"), 0);
         Assert.assertEquals(13.4, htwLocation.get("longitude"), 0);
@@ -33,15 +33,15 @@ public class GeoLocationGeneratorTests {
     public void shouldReturnTrueReturnDeLocation(){
         String hostName = "node";
 
-        Map<String, Double> deLocation = GeoLocationGenerator.getLatitudeLongitude(hostName);
+        Map<String, Double> deLocation = GeoLocationController.getLatitudeLongitude(hostName);
 
-        Assert.assertEquals(GeoLocationGenerator.DE_LATITUDE, deLocation.get("latitude"), 0);
-        Assert.assertEquals(GeoLocationGenerator.DE_LONGITUDE, deLocation.get("longitude"), 0);
+        Assert.assertEquals(GeoLocationController.DE_LATITUDE, deLocation.get("latitude"), 0);
+        Assert.assertEquals(GeoLocationController.DE_LONGITUDE, deLocation.get("longitude"), 0);
     }
 
     @Test
     public void shouldRetrunTrueCheckResponseFromIpApi(){
-        GeoLocationIpApi geoLocationIpApi = GeoLocationGenerator.getDataFromGeolocationIpApi("htw-berlin.de");
+        GeoLocationIpApi geoLocationIpApi = GeoLocationController.getDataFromGeolocationIpApi("htw-berlin.de");
 
         Assert.assertNotNull(geoLocationIpApi.getQuery());
     }

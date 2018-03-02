@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class DataController {
     public static final String REDIS_CHANNEL = "result:grid-xmpp-user-001";
-    public static final String WEBSOCKET_MESSAGE_URI = "/worker/data";
+    private static final String WEBSOCKET_MESSAGE_URI = "/worker/data";
 
     @Autowired
     private SimpMessagingTemplate brokerMessagingTemplate;
@@ -26,16 +26,19 @@ public class DataController {
     private Worker worker;
     private String receivedChannel;
 
+    /**
+     * handling received message from redis
+     *
+     * @param worker
+     * @param receivedChannel
+     */
     public void handleMessage(Worker worker, String receivedChannel){
         this.worker = worker;
         this.receivedChannel = receivedChannel;
 
         displayRedisMessage();
         prepareWorkerData();
-
-        MasterWorker masterWorker = new MasterWorker(worker, new Master());
-
-        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_URI, masterWorker);
+        sendWorkerAndMasterDataToClient();
     }
 
     private void displayRedisMessage()
@@ -45,6 +48,12 @@ public class DataController {
 
     }
 
+    /**
+     * generate random latitude und longitude
+     *
+     * @param hostName
+     * @return
+     */
     private String changeHostNameWithRandomData(String hostName){
         if(listOfRandomHostName.containsKey(hostName)){
             return listOfRandomHostName.get(hostName);
@@ -62,6 +71,9 @@ public class DataController {
         return Integer.toString(newHostName);
     }
 
+    /**
+     * data manipulation process before send to client
+     */
     private void prepareWorkerData(){
         // use random location
 //        worker.setHostName(changeHostNameWithRandomData(worker.getHostName()));
@@ -74,5 +86,15 @@ public class DataController {
         } else{
             workerLocationController.generateGeoLocationAndSaveToRedis();
         }
+    }
+
+    /**
+     * send worker and master data to client via websocket
+     */
+    private void sendWorkerAndMasterDataToClient(){
+        Master master = new Master();
+        MasterWorker masterWorker = new MasterWorker(worker, master);
+
+        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_URI, masterWorker);
     }
 }

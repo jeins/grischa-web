@@ -6,11 +6,19 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GeoLocationGenerator {
+public class GeoLocationController {
     private static String IPAPI_URL = "http://ip-api.com/json/";
     public static double DE_LATITUDE = 51.165691;
     public static double DE_LONGITUDE = 10.451526;
 
+    /**
+     * get latitude and longitude
+     * if a domain exist from hostname with generate from API
+     * else get latitude and longitude from middle of germany
+     *
+     * @param hostName
+     * @return
+     */
     public static Map<String, Double> getLatitudeLongitude(String hostName){
         Map<String, Double> latitudeLongitude = new HashMap<String, Double>();
 
@@ -21,7 +29,6 @@ public class GeoLocationGenerator {
             latitudeLongitude.put("latitude", geoLocationIpApi.getLat());
             latitudeLongitude.put("longitude", geoLocationIpApi.getLon());
         } else {
-            // if hostname not contains any domain, use latitude and longitude from middle of germany
             latitudeLongitude.put("latitude", DE_LATITUDE);
             latitudeLongitude.put("longitude", DE_LONGITUDE);
         }
@@ -29,6 +36,12 @@ public class GeoLocationGenerator {
         return latitudeLongitude;
     }
 
+    /**
+     * convert domain to latitude and longitude with ip-api.com
+     *
+     * @param domain
+     * @return
+     */
     public static GeoLocationIpApi getDataFromGeolocationIpApi(String domain){
         RestTemplate restTemplate = new RestTemplate();
 
