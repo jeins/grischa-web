@@ -35,8 +35,8 @@ public class GeoLocationGeneratorTests {
 
         Map<String, Double> deLocation = GeoLocationController.getLatitudeLongitude(hostName);
 
-        Assert.assertEquals(GeoLocationController.DE_LATITUDE, deLocation.get("latitude"), 0);
-        Assert.assertEquals(GeoLocationController.DE_LONGITUDE, deLocation.get("longitude"), 0);
+        Assert.assertEquals(GeoLocationController.MIDDLE_DE_LATITUDE, deLocation.get("latitude"), 0);
+        Assert.assertEquals(GeoLocationController.MIDDLE_DE_LONGITUDE, deLocation.get("longitude"), 0);
     }
 
     @Test

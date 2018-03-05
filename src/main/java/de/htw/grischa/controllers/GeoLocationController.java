@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class GeoLocationController {
     private static String IPAPI_URL = "http://ip-api.com/json/";
-    public static double DE_LATITUDE = 51.165691;
-    public static double DE_LONGITUDE = 10.451526;
+    public static double MIDDLE_DE_LATITUDE = 51.165691;
+    public static double MIDDLE_DE_LONGITUDE = 10.451526;
 
     /**
      * get latitude and longitude
@@ -21,16 +21,23 @@ public class GeoLocationController {
      */
     public static Map<String, Double> getLatitudeLongitude(String hostName){
         Map<String, Double> latitudeLongitude = new HashMap<String, Double>();
+        boolean setLatLonToMiddleDe = true;
 
         if(hostName.contains(".")){
             String domain = hostName.substring(hostName.indexOf(".")+1);
             GeoLocationIpApi geoLocationIpApi = getDataFromGeolocationIpApi(domain);
 
-            latitudeLongitude.put("latitude", geoLocationIpApi.getLat());
-            latitudeLongitude.put("longitude", geoLocationIpApi.getLon());
-        } else {
-            latitudeLongitude.put("latitude", DE_LATITUDE);
-            latitudeLongitude.put("longitude", DE_LONGITUDE);
+            if(geoLocationIpApi.getStatus().equals("success")){
+                latitudeLongitude.put("latitude", geoLocationIpApi.getLat());
+                latitudeLongitude.put("longitude", geoLocationIpApi.getLon());
+
+                setLatLonToMiddleDe = false;
+            }
+        }
+
+        if(setLatLonToMiddleDe){
+            latitudeLongitude.put("latitude", MIDDLE_DE_LATITUDE);
+            latitudeLongitude.put("longitude", MIDDLE_DE_LONGITUDE);
         }
 
         return latitudeLongitude;

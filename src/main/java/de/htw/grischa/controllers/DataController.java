@@ -16,7 +16,7 @@ public class DataController {
     private static final String WEBSOCKET_MESSAGE_URI = "/worker/data";
 
     @Autowired
-    private SimpMessagingTemplate brokerMessagingTemplate;
+    private SimpMessagingTemplate template;
 
     @Autowired
     private WorkerLocationController workerLocationController;
@@ -95,6 +95,6 @@ public class DataController {
         Master master = new Master();
         MasterWorker masterWorker = new MasterWorker(worker, master);
 
-        brokerMessagingTemplate.convertAndSend(WEBSOCKET_MESSAGE_URI, masterWorker);
+        template.convertAndSend(WEBSOCKET_MESSAGE_URI, masterWorker);
     }
 }
