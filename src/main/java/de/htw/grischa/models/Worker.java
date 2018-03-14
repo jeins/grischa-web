@@ -18,19 +18,12 @@ public class Worker {
         return result / 10000;
     }
 
-    public String getSendDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        return now.format(formatter);
-    }
-
     public void setStatusPoint(){
-        int value = getResult();
         statusPoint = "win";
 
-        if(value < 0){
+        if(result < 0){
             statusPoint = "lost";
-        } else if(value == 0){
+        } else if(result == 0){
             statusPoint = "draw";
         }
     }

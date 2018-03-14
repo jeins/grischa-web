@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GeoLocationGeneratorTests {
+public class GeoLocationControllerTests {
 
     @SpringBootApplication
     static class Config{}

@@ -43,9 +43,10 @@ public class DataController {
 
     private void displayRedisMessage()
     {
+        System.out.println();
         System.out.println("Received From Channel: " + receivedChannel);
         System.out.println(worker.toString());
-
+        System.out.println("----------");
     }
 
     /**

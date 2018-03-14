@@ -55,7 +55,7 @@ DataProvider.prototype.saveToLocalStorage = function (worker) {
         }
 
         var d = new Date();
-        worker['timeOnClient'] = d.getMilliseconds();
+        worker['timeOnClient'] = Date.now();//d.getMilliseconds();
         arrWorkerData.push(worker);
 
         localStorage.setItem(hostName, JSON.stringify(arrWorkerData));

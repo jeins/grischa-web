@@ -129,6 +129,7 @@
         cleanUpTestStatus();
 
         $('#testStatusLabel').show();
+
         if (comparingTest.includes(false)) {
             $('#testStatusLabel').html("FAILED");
             $('#testStatus').addClass("btn-danger");
@@ -259,6 +260,7 @@
                 webValue.sort(function (x, y) {
                     return new Date(y.sendDate) - new Date(x.sendDate);
                 });
+
                 for (var j = 0; j < redisValue.length; j++) {
                     var redisWorkerValue = redisValue[j];
                     var webWorkerValue = webValue[j];

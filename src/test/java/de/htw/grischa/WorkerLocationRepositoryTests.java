@@ -40,13 +40,13 @@ public class WorkerLocationRepositoryTests {
     }
 
     @Test
-    public void existByHostNameShouldReturnTrue(){
+    public void hostNameExistShouldReturnTrue(){
         boolean isExist = workerLocationRepository.existByHostName(hostNameTest);
         Assert.assertEquals(true, isExist);
     }
 
     @Test
-    public void existByHostNameShouldReturnFalse(){
+    public void hostNameNotFoundShouldReturnFalse(){
         boolean isExist = workerLocationRepository.existByHostName("def");
         Assert.assertEquals(false, isExist);
     }

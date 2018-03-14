@@ -20,7 +20,7 @@ import static org.hamcrest.core.IsCollectionContaining.hasItems;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GrischaApplicationTests {
+public class RedisConnectionTests {
 
 	@Autowired
 	RedisConnectionFactory redisConnectionFactory;
