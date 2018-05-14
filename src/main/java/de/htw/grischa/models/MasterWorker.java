@@ -9,7 +9,7 @@ public class MasterWorker {
     private Worker worker;
     private Master master;
     private LocalDateTime sendAt;
-    private long timeOnClientServer = System.currentTimeMillis();
+    private long timeAfterPrepareData = System.currentTimeMillis();
 
     public MasterWorker(Worker worker, Master master) {
         this.worker = worker;

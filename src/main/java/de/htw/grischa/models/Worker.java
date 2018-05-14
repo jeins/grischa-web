@@ -13,6 +13,8 @@ public class Worker {
     private double latitude;
     private double longitude;
     private String statusPoint;
+    private String timeOnWorker;
+    private long timeOnClientServer;
 
     public int getResult() {
         return result / 10000;

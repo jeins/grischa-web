@@ -31,12 +31,15 @@ public class WorkerLocationController {
         this.worker = worker;
     }
 
-    public boolean isLocationKeyExist(String hostname){
-        return workerLocationRepository.existByHostName(hostname);
+    public boolean isLocationKeyExist(){
+        String key = getHostNameKey(worker.getHostName());
+
+        return workerLocationRepository.existByHostName(key);
     }
 
     public void setLatitudeLongitude(){
-        WorkerLocation workerLocation = workerLocationRepository.findByHostName(worker.getHostName());
+        String key = getHostNameKey(worker.getHostName());
+        WorkerLocation workerLocation = workerLocationRepository.findByHostName(key);
 
         worker.setLatitude(workerLocation.getLatitude());
         worker.setLongitude(workerLocation.getLongitude());
@@ -74,6 +77,16 @@ public class WorkerLocationController {
         for (int i = 0; i < latLongDE.length; i++){
             workerLocationRepository.delete(Integer.toString(i));
         }
+    }
+
+    private String getHostNameKey(String hostname){
+        String key = hostname;
+
+        if(hostname.contains(".")){
+            key = hostname.substring(hostname.indexOf(".")+1);
+        }
+
+        return key;
     }
 
     private double[][] randomLatLongDE(){

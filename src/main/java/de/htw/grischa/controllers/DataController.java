@@ -34,6 +34,7 @@ public class DataController {
      */
     public void handleMessage(Worker worker, String receivedChannel){
         this.worker = worker;
+        this.worker.setTimeOnClientServer(System.currentTimeMillis());
         this.receivedChannel = receivedChannel;
 
         displayRedisMessage();
@@ -82,7 +83,7 @@ public class DataController {
 
         workerLocationController.setWorker(worker);
 
-        if(workerLocationController.isLocationKeyExist(worker.getHostName())){
+        if(workerLocationController.isLocationKeyExist()){
             workerLocationController.setLatitudeLongitude();
         } else{
             workerLocationController.generateGeoLocationAndSaveToRedis();
